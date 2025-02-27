@@ -14,6 +14,7 @@ import {
   SquareTerminal,
 } from "lucide-react";
 
+import logo from "@/assets/logo.png";
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -27,13 +28,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Playground",
@@ -155,6 +153,7 @@ const data = {
 export function PumpkinSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { data: auth, status } = useSession();
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -162,9 +161,7 @@ export function PumpkinSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Command className="size-4" />
-                </div>
+                <Image src={logo} alt="Logo" width={36} height={36} />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Pumpkin</span>
                   <span className="truncate text-xs">Tough Cookie</span>
@@ -180,7 +177,7 @@ export function PumpkinSidebar({
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

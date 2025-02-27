@@ -1,8 +1,10 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
 
 import { db } from "@/server/db";
+import { NextResponse } from "next/server";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -32,6 +34,11 @@ declare module "next-auth" {
  */
 export const authConfig = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+    }),
+
     DiscordProvider,
     /**
      * ...add more providers here.
@@ -45,6 +52,20 @@ export const authConfig = {
   ],
   adapter: PrismaAdapter(db),
   callbacks: {
+    authorized: async ({ request, auth }) => {
+      throw new Error('hi');
+      const url = request.nextUrl;
+      const pathname = url.pathname;
+      if (!pathname.includes("auth") && !auth?.user) {
+        return NextResponse.redirect("/auth");
+      }
+
+      if (pathname.includes("auth") && auth?.user) {
+        return NextResponse.redirect("/");
+      }
+
+      return NextResponse.next();
+    },
     session: ({ session, user }) => ({
       ...session,
       user: {

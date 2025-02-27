@@ -63,6 +63,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    creations    Creation[]
 }
 
 model VerificationToken {
@@ -71,4 +72,16 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Creation {
+  id        String  @id @default(cuid())
+  url       String
+  status    String  @default("unknown")
+
+  createdAt DateTime @default(now())
+  error     String?
+  
+  userId    String 
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

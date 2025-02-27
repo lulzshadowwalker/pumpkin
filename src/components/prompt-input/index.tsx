@@ -29,7 +29,7 @@ export function PromptInput() {
           prompt: form.get("prompt"),
         }),
       });
-      let prediction: Prediction = await response.json();
+      const prediction: Prediction = await response.json();
       if (response.status !== 201) {
         console.error("failed to create creation", prediction);
       }

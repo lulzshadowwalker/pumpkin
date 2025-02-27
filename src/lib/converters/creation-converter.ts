@@ -9,6 +9,7 @@ export const creationConverter = {
       status: match(prediction.status),
       createdAt: prediction.created_at,
       error: prediction.error as string,
+      userId: '-1',
     };
   }
 };

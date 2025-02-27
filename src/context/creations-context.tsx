@@ -47,7 +47,7 @@ export function CreationsProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  function updateCreation(creation: Creation) {
+  async function updateCreation(creation: Creation) {
     setCreations((prev) => {
       const index = prev.findIndex((c) => c.id === creation.id);
       if (index === -1) {
@@ -57,12 +57,12 @@ export function CreationsProvider({ children }: { children: React.ReactNode }) {
       return [...prev.slice(0, index), creation, ...prev.slice(index + 1)];
     });
 
-    updateCreationAction(creation);
+    await updateCreationAction(creation);
   }
 
-  function addCreation(creation: Creation) {
+  async function addCreation(creation: Creation) {
     setCreations((prev) => [creation, ...prev]);
-    createCreation(creation);
+    await createCreation(creation);
   }
 
   return (
